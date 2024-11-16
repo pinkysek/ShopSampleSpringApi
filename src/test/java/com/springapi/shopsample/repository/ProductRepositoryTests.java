@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductRepositoryTests {
 
     @Autowired
-    private IProductRepository productRepository;
+    private ProductRepository productRepository;
 
     /**
      * Tests that a ProductEntity is saved successfully.

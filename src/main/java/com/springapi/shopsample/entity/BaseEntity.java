@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntity implements IIdentifiedEntity<Long> {
+public abstract class BaseEntity implements IdentifiedEntity<Long> {
 
     /**
      * The unique identifier for the entity.

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Repository interface for ProductEntity.
  * Extends JpaRepository to provide CRUD operations for ProductEntity.
  */
-public interface IProductRepository extends JpaRepository<ProductEntity, Long> {
+public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 }

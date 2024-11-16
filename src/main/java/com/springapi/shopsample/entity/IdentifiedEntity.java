@@ -5,7 +5,7 @@ package com.springapi.shopsample.entity;
  *
  * @param <ID> the type of the identifier
  */
-public interface IIdentifiedEntity<ID> {
+public interface IdentifiedEntity<ID> {
 
     /**
      * Gets the identifier of the entity.
