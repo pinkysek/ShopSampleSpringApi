@@ -3,25 +3,39 @@ package com.springapi.shopsample.repository;
 import com.springapi.shopsample.entity.product.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Integration tests for the ProductRepository.
- * Uses Spring Boot's test framework and MockMvc for testing.
+ * ProductRepositoryTests is a test class for the ProductRepository.
+ * It uses Spring Boot's testing support and runs with the "test" profile.
+ * The class also executes SQL scripts to set up the test data.
  */
 @SpringBootTest
-@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@Sql(scripts = "/test-products.sql")
 public class ProductRepositoryTests {
 
     @Autowired
     private ProductRepository productRepository;
+
+    /**
+     * Tests that all products are retrieved successfully.
+     * Verifies that the first product in the list has the expected name.
+     */
+    @Test
+    void testFindAllProducts() {
+        List<ProductEntity> products = productRepository.findAll();
+        assertEquals("Laptop", products.getFirst().getName());
+    }
 
     /**
      * Tests that a ProductEntity is saved successfully.
