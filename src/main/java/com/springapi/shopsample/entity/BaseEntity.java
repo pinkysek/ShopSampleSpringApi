@@ -20,7 +20,7 @@ public abstract class BaseEntity implements IdentifiedEntity<Long> {
      * The unique identifier for the entity.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     /**
