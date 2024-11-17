@@ -10,8 +10,8 @@
     </parent>
     <groupId>com.springapi</groupId>
     <artifactId>shopsample</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>shopsample</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>ShopSample</name>
     <description>ShopSampleSpringApi project with Spring Boot</description>
     <url/>
     <licenses>
