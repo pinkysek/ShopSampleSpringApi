@@ -1,12 +1,17 @@
 package com.springapi.shopsample.service.impl;
 
 import com.springapi.shopsample.dto.IdentifiedDto;
+import com.springapi.shopsample.dto.PagingDto;
 import com.springapi.shopsample.entity.IdentifiedEntity;
 import com.springapi.shopsample.mapper.BaseMapper;
 import com.springapi.shopsample.service.BaseService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -96,15 +101,22 @@ public abstract class BaseServiceImpl<E extends IdentifiedEntity<ID>, D extends 
         }
     }
 
-    /**
-     * Retrieves all entities and converts them to DTOs.
-     *
-     * @return an Iterable containing Optionals of DTOs
-     */
     @Override
-    public Iterable<Optional<D>> findAll() {
+    public List<D> findAll() {
         return repository.findAll().stream()
-                .map(entity -> Optional.of(mapper.toDto(entity)))
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PagingDto<D> findAllWithPaging(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<E> entities = repository.findAll(pageable);
+
+        List<D> dtoList = entities.stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return new PagingDto<>(dtoList, (int) entities.getTotalElements(), page, size);
     }
 }

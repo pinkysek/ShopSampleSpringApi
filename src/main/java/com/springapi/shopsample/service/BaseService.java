@@ -1,15 +1,18 @@
 package com.springapi.shopsample.service;
 
 import com.springapi.shopsample.dto.IdentifiedDto;
+import com.springapi.shopsample.dto.PagingDto;
 import com.springapi.shopsample.entity.IdentifiedEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
- * IBaseService is a generic interface that defines common CRUD operations
- * for entities that implement the IIdentifiedEntity interface.
+ * BaseService is a generic interface that defines common CRUD operations
+ * for entities that implement the IdentifiedEntity interface.
  *
  * @param <E>  the type of the entity
+ * @param <D>  the type of the DTO
  * @param <ID> the type of the entity's identifier
  */
 public interface BaseService<E extends IdentifiedEntity<ID>, D extends IdentifiedDto<ID>, ID> {
@@ -48,7 +51,16 @@ public interface BaseService<E extends IdentifiedEntity<ID>, D extends Identifie
     /**
      * Retrieves all entities.
      *
-     * @return an Iterable containing Optionals of all entities
+     * @return a list of all entities
      */
-    Iterable<Optional<D>> findAll();
+    List<D> findAll();
+
+    /**
+     * Retrieves all entities with pagination.
+     *
+     * @param page the page number to retrieve
+     * @param size the number of entities per page
+     * @return a PagingDto containing the entities for the specified page
+     */
+    PagingDto<D> findAllWithPaging(int page, int size);
 }
