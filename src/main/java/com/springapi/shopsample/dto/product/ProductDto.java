@@ -1,6 +1,7 @@
-package com.springapi.shopsample.dto;
+package com.springapi.shopsample.dto.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.springapi.shopsample.dto.IdentifiedDto;
 import lombok.Getter;
 import lombok.Setter;
 

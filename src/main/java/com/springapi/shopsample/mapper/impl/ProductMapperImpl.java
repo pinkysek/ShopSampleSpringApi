@@ -1,6 +1,6 @@
 package com.springapi.shopsample.mapper.impl;
 
-import com.springapi.shopsample.dto.ProductDto;
+import com.springapi.shopsample.dto.product.ProductDto;
 import com.springapi.shopsample.entity.product.ProductEntity;
 import com.springapi.shopsample.mapper.ProductMapper;
 
