@@ -1,6 +1,7 @@
 package com.springapi.shopsample.service;
 
-import com.springapi.shopsample.dto.ProductDto;
+import com.springapi.shopsample.dto.PagingDto;
+import com.springapi.shopsample.dto.product.ProductDto;
 import com.springapi.shopsample.entity.product.ProductEntity;
 import com.springapi.shopsample.mapper.ProductMapper;
 import com.springapi.shopsample.repository.ProductRepository;
@@ -10,8 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,9 +187,73 @@ class ProductServiceTests {
         when(productMapper.toDto(product1)).thenReturn(productDto1);
         when(productMapper.toDto(product2)).thenReturn(productDto2);
 
-        Iterable<Optional<ProductDto>> products = productService.findAll();
+        List<ProductDto> products = productService.findAll();
 
         assertNotNull(products);
-        assertEquals(2, ((List<?>) products).size());
+        assertEquals(2, products.size());
+    }
+
+    /**
+     * Tests the successful retrieval of all products with pagination.
+     * Verifies that the retrieved products are not null and have the expected size and pagination details.
+     */
+    @Test
+    void findAllProductsWithPagingSuccessfully() {
+        ProductEntity product1 = new ProductEntity();
+        product1.setId(1L);
+        ProductEntity product2 = new ProductEntity();
+        product2.setId(2L);
+        ProductDto productDto1 = new ProductDto();
+        productDto1.setId(1L);
+        ProductDto productDto2 = new ProductDto();
+        productDto2.setId(2L);
+
+        Page<ProductEntity> productPage = new PageImpl<>(List.of(product1, product2), PageRequest.of(0, 2), 2);
+        when(productRepository.findAll(any(Pageable.class))).thenReturn(productPage);
+        when(productMapper.toDto(product1)).thenReturn(productDto1);
+        when(productMapper.toDto(product2)).thenReturn(productDto2);
+
+        PagingDto<ProductDto> result = productService.findAllWithPaging(1, 2);
+
+        assertNotNull(result);
+        assertEquals(2, result.getItems().size());
+        assertEquals(1, result.getPageNumber());
+        assertEquals(2, result.getPageSize());
+        assertEquals(2, result.getTotalCount());
+        assertEquals(1, result.getTotalPages());
+        assertFalse(result.isHasPrevious());
+        assertFalse(result.isHasNext());
+    }
+
+    /**
+     * Tests the retrieval of all products with pagination when the page is empty.
+     * Verifies that the retrieved products are empty and pagination details are correct.
+     */
+    @Test
+    void findAllProductsWithPagingEmptyPage() {
+        Page<ProductEntity> productPage = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 2), 0);
+        when(productRepository.findAll(any(Pageable.class))).thenReturn(productPage);
+
+        PagingDto<ProductDto> result = productService.findAllWithPaging(1, 2);
+
+        assertNotNull(result);
+        assertTrue(result.getItems().isEmpty());
+        assertEquals(1, result.getPageNumber());
+        assertEquals(2, result.getPageSize());
+        assertEquals(0, result.getTotalCount());
+        assertEquals(0, result.getTotalPages());
+        assertFalse(result.isHasPrevious());
+        assertFalse(result.isHasNext());
+    }
+
+    /**
+     * Tests the retrieval of all products with pagination when the page number is invalid.
+     * Verifies that the retrieved products are empty and pagination details are correct.
+     */
+    @Test
+    void findAllProductsWithPagingInvalidPage() {
+        when(productRepository.findAll(any(Pageable.class))).thenReturn(Page.empty());
+        RuntimeException exception = assertThrows(IllegalArgumentException.class, () -> productService.findAllWithPaging(-1, 2));
+        assertEquals("Page index must not be less than zero", exception.getMessage());
     }
 }
