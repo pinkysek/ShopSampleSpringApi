@@ -47,7 +47,7 @@ public class ProductController {
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         Optional<ProductDto> product = productService.getById(id);
         return product.map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("The product with ID: " + id + " was not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("The product with ID: " + id + " was not found"));
     }
 
     @Operation(summary = "Get all products", description = "Returns a list of all products.")
@@ -82,10 +82,10 @@ public class ProductController {
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize) {
         if (pageNumber < 1)
-            throw new ResourceConflictException("Page number must be greater than 0.");
+            throw new ResourceConflictException("Page number must be greater than 0");
 
         if (pageSize < 1)
-            throw new ResourceConflictException("Page size must be greater than 0.");
+            throw new ResourceConflictException("Page size must be greater than 0");
 
         PagingDto<ProductDto> products = productService.findAllWithPaging(pageNumber, pageSize);
         return ResponseEntity.ok(products);
@@ -107,6 +107,6 @@ public class ProductController {
     public ResponseEntity<ProductDto> updateProductDescription(@PathVariable Long id, @RequestBody ProductDescriptionUpdateRequestDto dto) {
         Optional<ProductDto> product = productService.updateDescription(id, dto);
         return product.map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("The product with ID: " + id + " was not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("The product with ID: " + id + " was not found"));
     }
 }

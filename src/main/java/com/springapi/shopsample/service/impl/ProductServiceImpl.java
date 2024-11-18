@@ -37,10 +37,12 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductEntity, ProductDt
     public Optional<ProductDto> updateDescription(Long id, ProductDescriptionUpdateRequestDto dto) {
         ProductEntity productEntity = productRepository.findById(id).orElse(null);
         if (productEntity == null) {
+            logger.warn("Product with ID {} not found", id);
             return Optional.empty();
         } else {
             productEntity.setDescription(dto.getDescription());
             ProductEntity updatedProduct = productRepository.save(productEntity);
+            logger.info("Updated description for product with ID {}", id);
             return Optional.of(productMapper.toDto(updatedProduct));
         }
     }

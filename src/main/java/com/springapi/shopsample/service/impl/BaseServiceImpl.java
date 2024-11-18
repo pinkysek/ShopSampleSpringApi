@@ -5,6 +5,8 @@ import com.springapi.shopsample.dto.PagingDto;
 import com.springapi.shopsample.entity.IdentifiedEntity;
 import com.springapi.shopsample.mapper.BaseMapper;
 import com.springapi.shopsample.service.BaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
  * @param <ID> the type of the identifier
  */
 public abstract class BaseServiceImpl<E extends IdentifiedEntity<ID>, D extends IdentifiedDto<ID>, ID> implements BaseService<E, D, ID> {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final JpaRepository<E, ID> repository;
     private final BaseMapper<E, D> mapper;
@@ -49,10 +53,12 @@ public abstract class BaseServiceImpl<E extends IdentifiedEntity<ID>, D extends 
     @Transactional
     public Optional<D> create(D dto) {
         if (dto == null) {
+            logger.warn("Attempted to create a null DTO");
             return Optional.empty();
         }
         E entity = mapper.toEntity(dto);
         E savedEntity = repository.save(entity);
+        logger.info("Created entity with ID {}", savedEntity.getId());
         return Optional.of(mapper.toDto(savedEntity));
     }
 
@@ -64,7 +70,14 @@ public abstract class BaseServiceImpl<E extends IdentifiedEntity<ID>, D extends 
      */
     @Override
     public Optional<D> getById(ID id) {
-        return repository.findById(id).map(mapper::toDto);
+        logger.debug("Fetching entity with ID {}", id);
+        Optional<D> result = repository.findById(id).map(mapper::toDto);
+        if (result.isPresent()) {
+            logger.debug("Entity with ID {} found", id);
+        } else {
+            logger.warn("Entity with ID {} not found", id);
+        }
+        return result;
     }
 
     /**
@@ -76,12 +89,22 @@ public abstract class BaseServiceImpl<E extends IdentifiedEntity<ID>, D extends 
     @Override
     @Transactional
     public Optional<D> update(D dto) {
-        if (dto == null || dto.getId() == null || !repository.existsById(dto.getId())) {
+        if (dto == null) {
+            logger.warn("Attempted to update a null DTO");
+            return Optional.empty();
+        }
+        if (dto.getId() == null) {
+            logger.warn("Attempted to update a DTO with null ID");
+            return Optional.empty();
+        }
+        if (!repository.existsById(dto.getId())) {
+            logger.warn("Entity with ID {} does not exist", dto.getId());
             return Optional.empty();
         }
         E entity = mapper.toEntity(dto);
-        entity.setId(dto.getId()); // Ensure ID consistency.
+        entity.setId(dto.getId());
         E updatedEntity = repository.save(entity);
+        logger.info("Updated entity with ID {}", updatedEntity.getId());
         return Optional.of(mapper.toDto(updatedEntity));
     }
 
@@ -94,22 +117,29 @@ public abstract class BaseServiceImpl<E extends IdentifiedEntity<ID>, D extends 
     @Override
     @Transactional
     public void delete(ID id) {
+        logger.debug("Attempting to delete entity with ID {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
+            logger.info("Deleted entity with ID {}", id);
         } else {
+            logger.warn("Entity with ID {} does not exist", id);
             throw new RuntimeException("Entity with ID " + id + " does not exist.");
         }
     }
 
     @Override
     public List<D> findAll() {
-        return repository.findAll().stream()
+        logger.debug("Fetching all entities");
+        List<D> result = repository.findAll().stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
+        logger.debug("Fetched {} entities", result.size());
+        return result;
     }
 
     @Override
     public PagingDto<D> findAllWithPaging(int page, int size) {
+        logger.debug("Fetching entities with paging - page: {}, size: {}", page, size);
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<E> entities = repository.findAll(pageable);
 
@@ -117,6 +147,7 @@ public abstract class BaseServiceImpl<E extends IdentifiedEntity<ID>, D extends 
                 .map(mapper::toDto)
                 .toList();
 
+        logger.debug("Fetched {} entities with paging", entities.getTotalElements());
         return new PagingDto<>(dtoList, (int) entities.getTotalElements(), page, size);
     }
 }

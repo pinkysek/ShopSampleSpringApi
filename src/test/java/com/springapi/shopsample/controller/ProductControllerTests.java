@@ -69,7 +69,7 @@ class ProductControllerTests {
 
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> productController.getProduct(1L));
 
-        assertEquals("The product with ID: 1 was not found.", exception.getMessage());
+        assertEquals("The product with ID: 1 was not found", exception.getMessage());
     }
 
     /**
@@ -111,7 +111,7 @@ class ProductControllerTests {
     void getAllProductsWithPagingInvalidPageNumber() {
         ResourceConflictException exception = assertThrows(ResourceConflictException.class, () -> productController.getAllProductsWithPaging(0, 10));
 
-        assertEquals("Page number must be greater than 0.", exception.getMessage());
+        assertEquals("Page number must be greater than 0", exception.getMessage());
     }
 
     /**
@@ -122,7 +122,7 @@ class ProductControllerTests {
     void getAllProductsWithPagingInvalidPageSize() {
         ResourceConflictException exception = assertThrows(ResourceConflictException.class, () -> productController.getAllProductsWithPaging(1, 0));
 
-        assertEquals("Page size must be greater than 0.", exception.getMessage());
+        assertEquals("Page size must be greater than 0", exception.getMessage());
     }
 
     /**
@@ -152,6 +152,6 @@ class ProductControllerTests {
         when(productService.updateDescription(anyLong(), any(ProductDescriptionUpdateRequestDto.class))).thenReturn(Optional.empty());
 
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> productController.updateProductDescription(1L, updateRequestDto));
-        assertEquals("The product with ID: 1 was not found.", exception.getMessage());
+        assertEquals("The product with ID: 1 was not found", exception.getMessage());
     }
 }
