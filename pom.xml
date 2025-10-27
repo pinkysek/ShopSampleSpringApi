@@ -8,26 +8,20 @@
         <version>3.5.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.springapi</groupId>
     <artifactId>shopsample</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>ShopSample</name>
     <description>ShopSampleSpringApi project with Spring Boot</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
         <java.version>25</java.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <springdoc.version>2.8.13</springdoc.version>
+        <zonky.version>2.6.0</zonky.version>
+        <zonky.postgres.version>2.1.1</zonky.postgres.version>
+        <postgres.binaries.version>17.5.0</postgres.binaries.version>
     </properties>
 
     <dependencyManagement>
@@ -35,7 +29,7 @@
             <dependency>
                 <groupId>io.zonky.test.postgres</groupId>
                 <artifactId>embedded-postgres-binaries-bom</artifactId>
-                <version>17.5.0</version>
+                <version>${postgres.binaries.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -43,6 +37,7 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -56,51 +51,50 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL driver -->
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
+
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <!-- MapStruct -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.6.3</version>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
-            <version>1.6.3</version>
+            <version>${mapstruct.version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- Swagger -->
+        <!-- Swagger / OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.8.13</version>
+            <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- JUnit Jupiter -->
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -108,11 +102,19 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Zonky test -->
+        <!-- Zonky Spring Test -->
         <dependency>
             <groupId>io.zonky.test</groupId>
             <artifactId>embedded-database-spring-test</artifactId>
-            <version>2.6.0</version>
+            <version>${zonky.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Zonky Postgres -->
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-postgres</artifactId>
+            <version>${zonky.postgres.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -131,7 +133,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>1.5.5.Final</version>
+                            <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
