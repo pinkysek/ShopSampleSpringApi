@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +23,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/products")
 @Tag(name = "Products", description = "API for managing products.")
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @Operation(summary = "Get a product by ID", description = "Returns a product based on its ID.")
     @ApiResponses(value = {
@@ -104,7 +103,7 @@ public class ProductController {
                             schema = @Schema(implementation = ApiErrorDto.class))),
     })
     @PatchMapping(value = "/{id}/description", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<ProductDto> updateProductDescription(@PathVariable Long id, @RequestBody ProductDescriptionUpdateRequestDto dto) {
+    public ResponseEntity<ProductDto> updateProductDescription(@PathVariable Long id, @Valid @RequestBody ProductDescriptionUpdateRequestDto dto) {
         Optional<ProductDto> product = productService.updateDescription(id, dto);
         return product.map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResourceNotFoundException("The product with ID: " + id + " was not found"));
