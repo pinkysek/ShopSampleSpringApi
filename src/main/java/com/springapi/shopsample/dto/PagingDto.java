@@ -55,5 +55,4 @@ public class PagingDto<T> {
         this.hasPrevious = pageNumber > 1;
         this.hasNext = pageNumber < totalPages;
     }
-
 }

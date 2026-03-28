@@ -22,5 +22,4 @@ public interface ProductService extends BaseService<ProductEntity, ProductDto, L
      * @return an Optional containing the updated ProductDto, or an empty Optional if the update failed
      */
     Optional<ProductDto> updateDescription(Long id, ProductDescriptionUpdateRequestDto dto);
-
 }

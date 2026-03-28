@@ -36,5 +36,4 @@ public class ProductDto implements IdentifiedDto<Long> {
     @Schema(description = "The URL of the product's image..", example = "https://www.example.com/image.jpg")
     @JsonProperty
     private String imageUrl;
-
 }

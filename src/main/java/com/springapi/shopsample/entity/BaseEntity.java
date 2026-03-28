@@ -51,5 +51,5 @@ public abstract class BaseEntity implements IdentifiedEntity<Long> {
     protected void onUpdate() {
         this.updatedOn = LocalDateTime.now();
     }
-
 }
+

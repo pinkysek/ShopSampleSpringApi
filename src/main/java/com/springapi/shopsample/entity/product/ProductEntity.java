@@ -49,5 +49,4 @@ public class ProductEntity extends BaseEntity {
      */
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
-
 }

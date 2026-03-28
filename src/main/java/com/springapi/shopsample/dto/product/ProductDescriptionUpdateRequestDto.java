@@ -17,5 +17,4 @@ public class ProductDescriptionUpdateRequestDto {
     @Schema(description = "The description of the product.", example = "This is a product description.")
     @JsonProperty
     private String description;
-
 }

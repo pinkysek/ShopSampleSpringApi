@@ -47,5 +47,4 @@ public class ZonedDateTimeMapper {
         ZonedDateTime serverZonedDateTime = zonedDateTime.withZoneSameInstant(zoneId);
         return serverZonedDateTime.toLocalDateTime();
     }
-
 }

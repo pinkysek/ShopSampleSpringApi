@@ -20,5 +20,4 @@ public interface IdentifiedEntity<ID> {
      * @param id the identifier to set
      */
     void setId(ID id);
-
 }

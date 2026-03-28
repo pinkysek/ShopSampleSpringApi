@@ -14,5 +14,5 @@ public class CustomWebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/v3/api-docs/**")
                 .addResourceLocations("classpath:/META-INF/resources/");
     }
-
 }
+

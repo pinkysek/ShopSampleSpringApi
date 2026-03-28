@@ -20,5 +20,4 @@ public interface IdentifiedDto<ID> {
      * @param id the identifier to set
      */
     void setId(ID id);
-
 }
