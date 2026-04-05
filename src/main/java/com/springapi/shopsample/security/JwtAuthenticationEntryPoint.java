@@ -1,7 +1,7 @@
 package com.springapi.shopsample.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springapi.shopsample.dto.ApiErrorDto;
+import tools.jackson.databind.json.JsonMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -20,10 +20,10 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
-    public JwtAuthenticationEntryPoint(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public JwtAuthenticationEntryPoint(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
@@ -35,6 +35,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         ApiErrorDto error = new ApiErrorDto(HttpStatus.UNAUTHORIZED,
                 "Authentication required. Please provide a valid JWT token.");
-        objectMapper.writeValue(response.getOutputStream(), error);
+        jsonMapper.writeValue(response.getOutputStream(), error);
     }
 }
